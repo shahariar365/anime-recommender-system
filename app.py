@@ -2,7 +2,7 @@ import streamlit as st
 import pickle
 import pandas as pd
 import requests
-
+import time 
 # --- Page Config ---
 st.set_page_config(page_title="AnimeVerse", page_icon="🌌", layout="wide")
 
@@ -17,13 +17,20 @@ def load_data():
 
 # Image caching is CRUCIAL to stop the reloading issue
 @st.cache_data(show_spinner=False)
-def fetch_poster(anime_id):
-    try:
-        response = requests.get(f'https://api.jikan.moe/v4/anime/{anime_id}')
-        data = response.json()
-        return data['data']['images']['jpg']['large_image_url']
-    except:
-        return "https://via.placeholder.com/225x320.png?text=No+Poster"
+def fetch_poster(anime_id, retries=3):
+    for i in range(retries):
+        try:
+            time.sleep(0.4) 
+            response = requests.get(f'https://api.jikan.moe/v4/anime/{anime_id}')
+            
+            if response.status_code == 200:
+                data = response.json()
+                return data['data']['images']['jpg']['large_image_url']
+            elif response.status_code == 429:
+                time.sleep(2)
+        except Exception as e:
+            pass
+    return "https://placehold.co/225x320/1e1e1e/FFF?text=No+Poster+Found"
 
 @st.cache_data
 def get_recommendations(anime_name, _pt, _similarity, _anime_df):
