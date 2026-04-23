@@ -3,6 +3,7 @@ import pickle
 import pandas as pd
 import requests
 import time 
+
 # --- Page Config ---
 st.set_page_config(page_title="AnimeVerse", page_icon="🌌", layout="wide")
 
@@ -51,7 +52,7 @@ def get_recommendations(anime_name, _pt, _similarity, _anime_df):
     except:
         return []
 
-# Cache the Top 50 HTML. Fixed the Indentation Bug here!
+# Cache the Top 50 HTML.
 @st.cache_data
 def generate_top_50_html(_popular_df):
     html = '<div class="grid-container">'
@@ -65,7 +66,6 @@ def generate_top_50_html(_popular_df):
 # --- Load Data ---
 anime_df, pt, similarity = load_data()
 
-# --- Custom CSS ---
 st.markdown("""
 <style>
     /* Fix Top Whitespace */
@@ -82,6 +82,7 @@ st.markdown("""
         align-items: center;
         border-bottom: 1px solid #444;
         margin-bottom: 1.5rem;
+        flex-wrap: wrap; /* Allows wrapping on small screens */
     }
     .logo { font-size: 1.8rem; font-weight: 800; color: #FF4B4B; letter-spacing: 1px; }
     
@@ -108,7 +109,7 @@ st.markdown("""
     .hero h1 { font-size: 3rem; color: white; font-weight: bold; margin-bottom: 0.5rem; }
     .hero p { font-size: 1.1rem; color: #ccc; }
 
-    /* HTML CSS Grid for Top 50 */
+    /* HTML CSS Grid for Top 50 (Desktop Default) */
     .grid-container {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -138,10 +139,40 @@ st.markdown("""
         background-color: #0e1117; border-top: 1px solid #333;
         padding: 3rem 1rem; margin-top: 4rem; display: flex; justify-content: space-around; flex-wrap: wrap;
     }
-    .footer-col { max-width: 300px; margin-bottom: 1rem; }
+    .footer-col { max-width: 300px; margin-bottom: 1.5rem; }
     .footer-col h3 { color: #FF4B4B; font-size: 1.2rem; margin-bottom: 1rem; }
     .footer-col p, .footer-col a { color: #888; font-size: 0.9rem; text-decoration: none; display: block; margin-bottom: 0.5rem; }
     .footer-col a:hover { color: white; }
+    
+    /* Tablet Portrait & Small Laptops */
+    @media screen and (max-width: 1024px) {
+        .grid-container { grid-template-columns: repeat(4, 1fr); } /* 4 columns */
+    }
+
+    /* Tablets & Large Phones */
+    @media screen and (max-width: 768px) {
+        .grid-container { grid-template-columns: repeat(3, 1fr); } /* 3 columns */
+        .hero h1 { font-size: 2.2rem; }
+        .hero { padding: 3rem 1.5rem; }
+        .navbar { flex-direction: column; gap: 10px; }
+        .nav-links a { margin: 0 10px; font-size: 0.9rem; }
+    }
+
+    /* Mobile Phones */
+    @media screen and (max-width: 480px) {
+        .grid-container { 
+            grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile posters */
+            gap: 0.8rem; 
+        } 
+        .card { height: 220px; } /* Smaller cards for mobile */
+        .hero h1 { font-size: 1.8rem; }
+        .hero p { font-size: 0.95rem; }
+        .hero { padding: 2rem 1rem; }
+        .overlay h4 { font-size: 0.85rem; }
+        .overlay p { font-size: 0.75rem; }
+        .footer { flex-direction: column; text-align: center; }
+        .footer-col { max-width: 100%; align-items: center; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -182,10 +213,9 @@ if search_clicked:
     recs = get_recommendations(selected_anime, pt, similarity, anime_df)
     if recs:
         st.markdown("<br><h4>Recommendations for you:</h4>", unsafe_allow_html=True)
-        cols = st.columns(5)
+        cols = st.columns(5) # Streamlit handles column responsiveness automatically!
         for i, rec in enumerate(recs):
             with cols[i]:
-                # Fixed indentation here too just in case!
                 html_str = f'<div class="card"><img src="{rec["poster"]}" alt="{rec["name"]}"><div class="overlay"><h4>{rec["name"]}</h4><p>{rec["rating"]}</p><p>{rec["members"]}</p></div></div>'
                 st.markdown(html_str, unsafe_allow_html=True)
     else:
@@ -212,7 +242,7 @@ popular_df = anime_df.sort_values('members', ascending=False).head(50)
 top_50_html = generate_top_50_html(popular_df)
 st.markdown(top_50_html, unsafe_allow_html=True)
 
-# --- 5. Modern Footer ---
+# --- 5. Footer ---
 st.markdown("""
 <div class="footer" id="footer">
     <div class="footer-col">
