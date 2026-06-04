@@ -1,10 +1,14 @@
 # 🌌 AnimeVerse - Machine Learning Recommendation System
 
-![AnimeVerse Dashboard](banner.png)
+## *AnimeVerse Dashboard*
 <img width="1912" height="876" alt="image" src="https://github.com/user-attachments/assets/ce887781-56b8-4f17-bf8e-90d649cf469d" />
 
+<img width="1919" height="878" alt="image" src="https://github.com/user-attachments/assets/3afcbd42-6eb6-4e50-b76d-14a91039c3e3" />
+
+<img width="1919" height="879" alt="image" src="https://github.com/user-attachments/assets/d6387786-4d45-4899-aef3-e60ad58803f6" />
+
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://anime-verse.streamlit.app/) 
-*(Click the badge above to view the live application!)*
+*(Click here to view the live application!)*
 
 
 ## 📌 Overview
@@ -24,7 +28,7 @@
 AnimeVerse does **NOT** recommend anime by looking at its genre, synopsis, or studio (Content-Based). Instead, it uses **Item-Based Collaborative Filtering**. 
 
 **The Math Behind the Magic (Cosine Similarity):**
-1. We created a massive **Vector Space (Pivot Table)** where rows are Anime, columns are Users, and the values are the Ratings (1-10) given by the users.
+1.I created a massive **Vector Space (Pivot Table)** where rows are Anime, columns are Users, and the values are the Ratings (1-10) given by the users.
 2. If a user searches for an anime (e.g., *"Death Note"*), the algorithm looks at the vector of *Death Note*.
 3. It then calculates the distance between the *Death Note* vector and all other anime vectors using **Cosine Similarity**.
 4. The mathematical formula finds hidden patterns. For example, it notices that users who highly rate *Death Note* also tend to highly rate *Code Geass* and *Attack on Titan*.
